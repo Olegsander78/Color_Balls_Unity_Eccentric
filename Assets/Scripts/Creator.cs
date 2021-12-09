@@ -11,6 +11,9 @@ public class Creator : MonoBehaviour
     private ActiveItem _itemInTube;
     private ActiveItem _itemInSpawner;
 
+    [SerializeField] private Transform _rayTransform;
+    [SerializeField] private LayerMask _layerMask;
+
     private void Start()
     {
         CreateItemInTube();
@@ -38,6 +41,7 @@ public class Creator : MonoBehaviour
         }
         _itemInTube.transform.localPosition = Vector3.zero;
         _itemInSpawner = _itemInTube;
+        _rayTransform.gameObject.SetActive(true);
         _itemInTube = null;
         CreateItemInTube();
     }
@@ -46,6 +50,13 @@ public class Creator : MonoBehaviour
     {
         if (_itemInSpawner)
         {
+            Ray ray = new Ray(_spawner.position, Vector3.down);
+            RaycastHit hit;
+            if(Physics.Raycast(ray,out hit,100,_layerMask, QueryTriggerInteraction.Ignore))
+            {
+                _rayTransform.localScale = new Vector3(1f, hit.distance, 1f);
+            }
+            
             if (Input.GetMouseButtonUp(0))
             {
                 Drop();
@@ -58,6 +69,7 @@ public class Creator : MonoBehaviour
         _itemInSpawner.Drop();
         //Чтобы бросить мяч только один раз обнуляем его
         _itemInSpawner = null;
+        _rayTransform.gameObject.SetActive(false);
         if (_itemInTube)
         {
             StartCoroutine(MoveToSpawner());
