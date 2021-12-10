@@ -7,7 +7,7 @@ public class ActiveItem : MonoBehaviour
 {
     public int Level;
     public float Radius;
-    [SerializeField] private Text _levelText;
+    [SerializeField] protected Text _levelText;
 
     [SerializeField] private Transform _visualtransform;
     [SerializeField] private SphereCollider _collider;
@@ -16,6 +16,13 @@ public class ActiveItem : MonoBehaviour
     public Rigidbody Rigidbody;
     public bool IsDead;
     [SerializeField] private Animator _animator;
+
+    public Projection Projection;
+
+    private void Start()
+    {
+        Projection.Hide();
+    }
 
     [ContextMenu("IncreaseLevel")]
     public void Increaselevel()
